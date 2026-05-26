@@ -2,9 +2,5 @@
   "buildCommand": "next build",
   "devCommand": "next dev",
   "installCommand": "npm install",
-  "framework": "nextjs",
-  "regions": ["iad1"],
-  "env": {
-    "GROQ_API_KEY": "@groq_api_key"
-  }
+  "framework": "nextjs"
 }
