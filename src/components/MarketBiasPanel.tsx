@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
-import { getLivePrice, generateMarketBias } from "@/lib/signal-generator";
+import { getLivePrice } from "@/lib/price-feed";
+import { generateMarketBias } from "@/lib/signal-generator";
 import type { MarketBias } from "@/lib/signal-generator";
 import { FOREX_PAIRS } from "@/lib/forex-data";
 
@@ -29,7 +30,7 @@ export default function MarketBiasPanel({ pairs }: Props) {
       setLoading(true);
       const results = await Promise.all(
         pairs.map(async (pair) => {
-          const price = getLivePrice(pair);
+          const price = await getLivePrice(pair);
           return generateMarketBias(pair, price);
         })
       );

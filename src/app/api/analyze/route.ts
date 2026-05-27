@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generateSignalFromAI, getLivePrice } from "@/lib/signal-generator";
+import { generateSignalFromAI } from "@/lib/signal-generator";
+import { getLivePriceAsync } from "@/lib/price-feed";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +10,8 @@ export async function POST(req: NextRequest) {
     const { pair } = body;
     if (!pair) return NextResponse.json({ error: "Pair is required" }, { status: 400 });
 
-    const price = getLivePrice(pair);
+    // Fetch LIVE price from free API
+    const price = await getLivePriceAsync(pair);
     const signal = await generateSignalFromAI(pair, price);
 
     return NextResponse.json({ signal, success: true });
@@ -22,6 +24,6 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const pair = req.nextUrl.searchParams.get("pair");
   if (!pair) return NextResponse.json({ error: "Pair required" }, { status: 400 });
-  const price = getLivePrice(pair);
+  const price = await getLivePriceAsync(pair);
   return NextResponse.json({ price, pair, success: true });
 }
